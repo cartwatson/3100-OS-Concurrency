@@ -1,5 +1,12 @@
-import java.math;
+import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
+/**
+ * @author Carter Watson A02312565@usu.edu
+ * Satisfies requirements for assign1 of CS3100
+*/
 public class Assign1 {
     public static void main(String[] args) {
         int length = args.length;
@@ -53,11 +60,11 @@ public class Assign1 {
                         if (n >= 1 && n <= 2147483647) {
                             message = "Value of e using " + args[i + 1] + " is " + calculateE(n);
                         } else {
-                            message = "Factorial valid range is [1, 2147483647]";
+                            message = "Valid e iterations range is [1, 2147483647]";
                         }
                     }
                     catch(Exception e) {
-                        message = "Factorial valid range is [1, 2147483647]";
+                        message = "Valid e iterations range is [1, 2147483647]";
                     }
                     break;
                 default:
@@ -78,6 +85,11 @@ public class Assign1 {
         }
     }
 
+    /**
+     * @author Carter Watson A02312565@usu.edu
+     * @param fib value in the fibonacci sequence
+     * @return value of fib in the fibonacci sequence
+     */
     private static int fibonacci(int fib) {
         if (fib <= 1) {
             return 1;
@@ -85,15 +97,54 @@ public class Assign1 {
         return fibonacci(fib - 1) + fibonacci(fib - 2);
     }
 
-    private static BigInteger factorial(BigInteger fac) {
-        for (int i = 0; i <=)
-    }
-
-    private static BigDecimal calculateE(int iterations) {
-        BigDecimal result = 0;
-        for (int i = 0; i <= iterations; i++) {
-            result += 1;
+    /**
+     * @author Carter Watson A02312565@usu.edu
+     * @param fac number to compute the factorial of
+     * @return computed factorial of fac
+     */
+    private static BigInteger factorial(int fac) {
+        BigInteger result = new BigInteger("1");
+        for (int i = 1; i < fac; i++) {
+            result = result.multiply(BigInteger.valueOf(i));
         }
         return result;
+    }
+
+    /**
+     * @author Carter Watson A02312565@usu.edu
+     * @param iterations how many iterations should be applied to computing e
+     * @return computed value of e
+     */
+    private static BigDecimal calculateE(int iterations) {
+        // init result, turn iterations into BigDecimal for calculations
+        BigDecimal result = new BigDecimal("1");
+        BigDecimal two = new BigDecimal("2");
+        // calculate e^iterations
+        for (int i = 1; i < iterations; i++) {
+            // // DEBUG \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
+            // System.out.println(i);
+            // System.out.println(two.pow(i));
+            // System.out.println(factorialEHelper(i));
+            // System.out.println(two.pow(i).divide(factorialEHelper(i), 16, RoundingMode.HALF_DOWN));
+            // // System.out.println(result);
+            // System.out.println("----");
+            // // DEBUG /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
+            result = result.add(two.pow(i).divide(factorialEHelper(i), 16, RoundingMode.HALF_DOWN));
+        }
+        // convert from e^2
+        return result.sqrt(new MathContext(16));
+    }
+
+    /**
+     * @desc computes factorial returning a BigDecimal
+     * @author Carter Watson A02312565@usu.edu
+     * @param fac number to compute the factorial of
+     * @return computed factorial of fac
+     */
+    private static BigDecimal factorialEHelper(int fac) {
+        if (fac == 1) {
+            return new BigDecimal(1);
+        }
+        return new BigDecimal(fac).multiply(factorialEHelper(--fac));
     }
 }
