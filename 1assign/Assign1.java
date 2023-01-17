@@ -1,7 +1,7 @@
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.math.MathContext;
 
 /**
  * @author Carter Watson A02312565@usu.edu
@@ -11,77 +11,66 @@ public class Assign1 {
     public static void main(String[] args) {
         int length = args.length;
 
-        // Covers cases with no or invalid number of params
+        // Cover cases with no params or invalid number of params
         if (length == 0 || length % 2 != 0) {
-            System.out.println("--- Assign 1 Help ---\n  -fib [n] : Compute the Fibonacci of [n]; valid range [0, 40]\n  -fac [n] : Compute the factorial of [n]; valid range, [0, 2147483647]\n  -e [n] : Compute the value of 'e' using [n] iterations; valid range [1, 2147483647]");
+            System.out.println(
+                "--- Assign 1 Help ---"
+                + "\n  -fib [n] : Compute the Fibonacci of [n]; valid range [0, 40]"
+                + "\n  -fac [n] : Compute the factorial of [n]; valid range, [0, 2147483647]"
+                + "\n  -e [n] : Compute the value of 'e' using [n] iterations; valid range [1, 2147483647]"
+            );
             return;
         }
 
         // iterate through parameters
         for (int i = 0; i < length; i++) {
-            String message = "";
             // figure out how param should be used
             switch (args[i]) {
                 case "-fib":
-                    // make sure postceding argument is an int
                     try {
                         int n = Integer.parseInt(args[i + 1]);
                         // make sure value is in valid range
                         if (n >= 0 && n <= 40) {
-                            message = "Fibonacci of " + args[i + 1] + " is " + fibonacci(n);
+                            System.out.println("Fibonacci of " + args[i + 1] + " is " + fibonacci(n));
                         } else {
-                            message = "Fibonacci valid range is [0, 40]";
+                            System.out.println("Fibonacci valid range is [0, 40]");
                         }
-                    }
-                    catch(Exception e) {
-                        message = "Fibonacci valid range is [0, 40]";
+                    } catch (Exception e) {
+                        System.out.println("ERROR: -fib must be followed by an integer in range [0, 40]!");
                     }
                     break;
                 case "-fac":
-                    // make sure postceding argument is an int
                     try {
                         int n = Integer.parseInt(args[i + 1]);
                         // make sure value is in valid range
                         if (n >= 0 && n <= 2147483647) {
-                            message = "Factorial of " + args[i + 1] + " is " + factorial(n);
+                            System.out.println("Factorial of " + args[i + 1] + " is " + factorial(n));
                         } else {
-                            message = "Factorial valid range is [0, 2147483647]";
+                            System.out.println("Factorial valid range is [0, 2147483647]");
                         }
-                    }
-                    catch(Exception e) {
-                        message = "Factorial valid range is [0, 2147483647]";
+                    } catch (Exception e) {
+                        System.out.println("ERROR: -fac must be followed by an integer in range [0, 2147483647]!");
                     }
                     break;
                 case "-e":
-                    // make sure postceding argument is an int
                     try {
                         int n = Integer.parseInt(args[i + 1]);
                         // make sure value is in valid range
                         if (n >= 1 && n <= 2147483647) {
-                            message = "Value of e using " + args[i + 1] + " is " + calculateE(n);
+                            System.out.println("Value of e using " + args[i + 1] + " is " + calculateE(n));
                         } else {
-                            message = "Valid e iterations range is [1, 2147483647]";
+                            System.out.println("Valid e iterations range is [1, 2147483647]");
                         }
-                    }
-                    catch(Exception e) {
-                        message = "Valid e iterations range is [1, 2147483647]";
+                    } catch (Exception e) {
+                        System.out.println("ERROR: -e must be followed by an integer in range [0, 2147483647]!");
                     }
                     break;
                 default:
-                    try {
-                        // if arg[i] is number, ignore it
-                        int n = Integer.parseInt(args[i]);
-                    }
-                    catch (Exception e) {
-                        // if not a number, it is an unknown argument
-                        if (args[i].charAt(0) == '-') {
-                            message = "Unknown command line argument: " + args[i];
-                        }
+                    if (args[i].charAt(0) == '-') {
+                        System.out.println("Unknown command line argument: " + args[i]);
                     }
                     break;
             }
-            // print message
-            System.out.println(message);
         }
     }
 
@@ -104,7 +93,7 @@ public class Assign1 {
      */
     private static BigInteger factorial(int fac) {
         BigInteger result = new BigInteger("1");
-        for (int i = 1; i < fac; i++) {
+        for (int i = 1; i <= fac; i++) {
             result = result.multiply(BigInteger.valueOf(i));
         }
         return result;
@@ -116,20 +105,11 @@ public class Assign1 {
      * @return computed value of e
      */
     private static BigDecimal calculateE(int iterations) {
-        // init result, turn iterations into BigDecimal for calculations
+        // init result, use a BigDecimal with a value of 2 to calculate e^2
         BigDecimal result = new BigDecimal("1");
-        BigDecimal two = new BigDecimal("2");
-        // calculate e^iterations
+        // calculate e^2
         for (int i = 1; i < iterations; i++) {
-            // // DEBUG \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
-            // System.out.println(i);
-            // System.out.println(two.pow(i));
-            // System.out.println(factorialEHelper(i));
-            // System.out.println(two.pow(i).divide(factorialEHelper(i), 16, RoundingMode.HALF_DOWN));
-            // // System.out.println(result);
-            // System.out.println("----");
-            // // DEBUG /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
-            result = result.add(two.pow(i).divide(factorialEHelper(i), 16, RoundingMode.HALF_DOWN));
+            result = result.add(new BigDecimal("2").pow(i).divide(factorialEHelper(i), 32, RoundingMode.HALF_UP));
         }
         // convert from e^2
         return result.sqrt(new MathContext(16));
