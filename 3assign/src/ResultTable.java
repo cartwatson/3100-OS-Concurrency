@@ -9,15 +9,19 @@ import java.util.*;
 public class ResultTable {
     public HashMap results;
     // constuctor
-    public ResultTable() {
+    public ResultTable(int size) {
         // Use a Java HashMap as the underlying data structure.
             // Use aggregation, rather than inheritance.
-        results = new HashMap(1000);
+        results = new HashMap(size);
     }
 
     public void put(Task t) {
         // key = digit position
         // val = computed pi digit
         results.put(t.digitToCompute, t.result);
+    }
+
+    public int getValue(int i) {
+        return this.get(i);
     }
 }
