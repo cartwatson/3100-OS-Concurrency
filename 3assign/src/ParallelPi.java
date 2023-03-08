@@ -4,7 +4,7 @@ import java.util.*;
 public class ParallelPi {
     public static void main(String[] args) {
         // number of digits to compute
-        final int numOfDigits = 50;
+        final int numOfDigits = 1000;
 
         // get runtime instance
         Runtime runtime = Runtime.getRuntime();
