@@ -15,15 +15,15 @@ public class ResultTable {
         results = new HashMap<>(size);
     }
 
-    public Object getValue(int i) {
+    public synchronized Object getValue(int i) {
         return results.get((Integer) i);
     }
 
-    public int getSize() {
+    public synchronized int getSize() {
         return results.size();
     }
 
-    public void insert(int key, int value) {
+    public synchronized void insert(int key, int value) {
         results.put((Integer) key, (Integer) value);
     }
 }

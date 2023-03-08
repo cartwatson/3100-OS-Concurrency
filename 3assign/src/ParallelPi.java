@@ -19,10 +19,12 @@ public class ParallelPi {
         ResultTable results = new ResultTable(numOfDigits);
 
         // number of worker threads = number of cores
-        ArrayList workerThreads = new ArrayList<WorkerThread>();
-        for (int i = 0; i < runtime.availableProcessors(); i++) {
+        int processors = runtime.availableProcessors();
+        Thread[] threads = new Thread[processors];
+        for (int i = 0; i < processors; i++) {
             // create worker threads
-            workerThreads.add(new WorkerThread(taskQueue, results));
+            threads[i] = new Thread(new WorkerThread(taskQueue, results));
+            threads[i].start();
         }
 
         // init counter for outputing loading symbols
@@ -35,18 +37,6 @@ public class ParallelPi {
                 x += 10;
                 System.out.print(".");
                 System.out.flush();
-            }
-            
-            // keep worker threads going
-            for (int i = 0; i < workerThreads.size(); i++) {
-                WorkerThread w = (WorkerThread) workerThreads.get(i);
-                if (w.hasTask()) {
-                    w.compute();
-                } else {
-                    if (!taskQueue.isEmpty()) {
-                        w.getTask();
-                    }
-                }
             }
         }
         //end line after loading...

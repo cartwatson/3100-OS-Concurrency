@@ -24,11 +24,11 @@ public class TaskQueue {
         }
     }
 
-    public boolean isEmpty() {
+    public synchronized boolean isEmpty() {
         return queue.isEmpty();
     }
 
-    public Task pull() {
+    public synchronized Task pull() {
         return queue.poll();
     }
 }
