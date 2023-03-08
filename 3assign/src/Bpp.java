@@ -15,9 +15,11 @@
 		double sum;
 
 		N = (long) ((n + 20) * Math.log(10) / Math.log(2));
+
 		sum = 0;
 
 		for (a = 3; a <= (2 * N); a = nextPrime(a)) {
+
 			vmax = (long) (Math.log(2 * N) / Math.log(a));
 			av = 1;
 			for (i = 0; i < vmax; i++)
@@ -31,6 +33,7 @@
 			kq2 = 1;
 
 			for (k = 1; k <= N; k++) {
+
 				t = k;
 				if (kq >= a) {
 					do {
@@ -65,13 +68,14 @@
 					if (s >= av)
 						s -= av;
 				}
+
 			}
 
 			t = powMod(10, n - 1, av);
 			s = mulMod(s, t, av);
 			sum = (sum + (double) s / (double) av) % 1;
 		}
-		return (int) (sum * 1); // 1 is 1 decimal place
+		return (int) (sum * 1e1); // 1e9 is 9 decimal places
 	}
 
 	private long mulMod(long a, long b, long m) {
@@ -100,6 +104,7 @@
 			tempo = 1;
 		else if (b == 1)
 			tempo = a;
+
 		else {
 			long temp = powMod(a, b / 2, m);
 			if (b % 2 == 0)

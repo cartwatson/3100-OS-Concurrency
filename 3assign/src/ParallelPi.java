@@ -1,63 +1,67 @@
 import java.lang.Runtime;
+import java.util.*;
 
 public class ParallelPi {
     public static void main(String[] args) {
         // number of digits to compute
-        final int numOfTasks = 1000;
+        final int numOfDigits = 50;
+
+        // get runtime instance
+        Runtime runtime = Runtime.getRuntime();
 
         // start time
-        long start = System.currentTimeMillis()
+        long start = System.currentTimeMillis();
 
         // create queue
-        TaskQueue taskQueue = new TaskQueue(numOfTasks);
+        TaskQueue taskQueue = new TaskQueue(numOfDigits);
 
         // create hash table
-        ResultTable results = new ResultTable(numOfTasks);
+        ResultTable results = new ResultTable(numOfDigits);
 
         // number of worker threads = number of cores
+        ArrayList workerThreads = new ArrayList<WorkerThread>();
         for (int i = 0; i < runtime.availableProcessors(); i++) {
             // create worker threads
-            ArrayList workerThreads = new WorkerThread(taskQueue, results);
+            workerThreads.add(new WorkerThread(taskQueue, results));
         }
 
         // init counter for outputing loading symbols
         int x = 10;
-        while (results.size() < 1000) {
+        System.out.print("Loading");
+        while (results.getSize() < numOfDigits) {
             // for every tenth digit computed ouput a period
-            System.out.println("Loading");
             int digitsComputed = 0;
-            if (results.size() >= x) {
+            if (results.getSize() >= x) {
                 x += 10;
                 System.out.print(".");
                 System.out.flush();
             }
             
             // keep worker threads going
-            for (WorkerThread w : workerThreads) {
+            for (int i = 0; i < workerThreads.size(); i++) {
+                WorkerThread w = (WorkerThread) workerThreads.get(i);
                 if (w.hasTask()) {
                     w.compute();
                 } else {
-                    if (!queue.isEmpty()) {
-                        w.getTask()
+                    if (!taskQueue.isEmpty()) {
+                        w.getTask();
                     }
                 }
             }
         }
         //end line after loading...
+        System.out.print("."); // print for last set of ten
         System.out.println();
         
         // --- all digits computed, print results and exit ---
-        long end = System.currentTimeMillis()
+        long end = System.currentTimeMillis();
         // display computed value
         System.out.print("Computed Value of Pi: 3.");
-        for (long i = 1; i <= 1000; i++) {
+        for (int i = 1; i <= numOfDigits; i++) {
             System.out.print(results.getValue(i));
         }
         System.out.println();
         // print total time
-        System.out.println("Total Time (S): " + ((end - start) * 1000));
-        exit();
+        System.out.println("Total Time (mS): " + (end - start));
     }
 }
-
-main();

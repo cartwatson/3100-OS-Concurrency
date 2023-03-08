@@ -1,17 +1,20 @@
 public class Task {
-    public long digitToCompute;
-    public int result;
+    private int digitToCompute;
+    private int result;
 
     // constructor
-    public Task(long digit) {
+    public Task(int digit) {
         digitToCompute = digit;
     }
 
-    // computation method
+    public int getDigit() {
+        return this.digitToCompute;
+    }
+
     public int getResult() {
-        // actually compute using that one method
-        this.result = Bpp.getDecimal(digitToCompute);
-        // return and assign result
+        Bpp bpp = new Bpp();
+        // compute & return result
+        this.result = bpp.getDecimal(digitToCompute);
         return this.result;
     }
 }

@@ -7,21 +7,23 @@ import java.util.*;
     // Pass a reference to the hashtable via the worker thread's constructor
         // (not a global variable).
 public class ResultTable {
-    public HashMap results;
+    private HashMap results;
     // constuctor
     public ResultTable(int size) {
         // Use a Java HashMap as the underlying data structure.
             // Use aggregation, rather than inheritance.
-        results = new HashMap(size);
+        results = new HashMap<>(size);
     }
 
-    public void put(Task t) {
-        // key = digit position
-        // val = computed pi digit
-        results.put(t.digitToCompute, t.result);
+    public Object getValue(int i) {
+        return results.get((Integer) i);
     }
 
-    public int getValue(int i) {
-        return this.get(i);
+    public int getSize() {
+        return results.size();
+    }
+
+    public void insert(int key, int value) {
+        results.put((Integer) key, (Integer) value);
     }
 }

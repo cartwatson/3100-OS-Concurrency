@@ -14,16 +14,14 @@ public class WorkerThread {
     }
 
     public void compute() {
-        // compute
-        int result = task.getResult();
-        // add to hash table
-        resultTable.insert(task.digitToCompute, result);
+        // compute & add to hash table
+        resultTable.insert(task.getDigit(), task.getResult());
         // task is complete
         task = null;
     }
     
     public boolean hasTask() {
-        return (task == null);
+        return (task != null);
     }
 
     public void getTask() {
