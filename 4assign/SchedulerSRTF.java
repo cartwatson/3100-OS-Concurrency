@@ -25,13 +25,11 @@ public class SchedulerSRTF extends SchedulerBase implements Scheduler {
             processes.remove(cpu);
             contextSwitches++;
 
-            Process next = getNext();
             // add back to queue and sort it's place
             addToProcesses(cpu);
 
-            return next;
+            return getNext();
         }
-
 
         // burst complete
         if (cpu.isBurstComplete()) {
@@ -49,7 +47,6 @@ public class SchedulerSRTF extends SchedulerBase implements Scheduler {
             // grab next process or return null
             return getNext();
         }
-
         return cpu;
     }
 
@@ -71,10 +68,10 @@ public class SchedulerSRTF extends SchedulerBase implements Scheduler {
         // find process' place in queue
         for (int i = 0; i < processes.size(); i++) {
             // get remaining time of each process
-            int processTR = processes.get(i).getTotalTime() - processes.get(i).getElapsedTotal();
+            int iTR = processes.get(i).getTotalTime() - processes.get(i).getElapsedTotal();
             int pTR = p.getTotalTime() - p.getElapsedTotal();
 
-            if (processTR > pTR) { processes.add(i, p); return; }
+            if (iTR > pTR) { processes.add(i, p); return; }
         }
 
         // longest remaining time, add at end
