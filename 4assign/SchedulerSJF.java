@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class SchedulerSJF extends SchedulerBase implements Scheduler {
     // class variables
-    Platform platform;
+    private Platform platform;
     private ArrayList<Process> processes = new ArrayList<Process>();
 
     // constructor
@@ -13,22 +13,17 @@ public class SchedulerSJF extends SchedulerBase implements Scheduler {
     // methods
     public void notifyNewProcess(Process p) {
         // first element, add
-        if (processes.isEmpty()) {
-            processes.add(p);
-            return;
-        }
+        if (processes.isEmpty()) { processes.add(p); return; }
         
-        // not first element
-        // find where process should be added
+        // find process' place in queue
         for (int i = 0; i < processes.size(); i++) {
-            // if total time of current element is greater than total time of incoming process
-            if (processes.get(i).getTotalTime() < p.getTotalTime()) { continue; }
-            // add in current elements place
-            else { processes.add(i, p); return; }
+            // if total time of current element is less than total time of incoming process
+            if (processes.get(i).getTotalTime() > p.getTotalTime()) { processes.add(i, p); return; }
         }
 
         // proccess total time is larger than all current processes, add as final element
         processes.add(p);
+        return;
     }
 
 
@@ -48,13 +43,13 @@ public class SchedulerSJF extends SchedulerBase implements Scheduler {
             platform.log(" Process " + cpu.getName() + " burst complete");
 
             // take completed burst process off queue
-            Process temp = processes.remove(0);
+            Process curr = processes.remove(0);
             contextSwitches++; // increment context switch
             
             // execution is compelete
             if (cpu.isExecutionComplete()) { platform.log(" Process " + cpu.getName() + " execution complete"); }
             // only re-add process to queue if process is not completed
-            else { processes.add(temp); }
+            else { processes.add(curr); }
             
             if (!processes.isEmpty()) {
                 // grab next process
@@ -69,6 +64,7 @@ public class SchedulerSJF extends SchedulerBase implements Scheduler {
             return next;
         }
 
+        // process not complete, return keep working on it
         return cpu;
     }
 }
