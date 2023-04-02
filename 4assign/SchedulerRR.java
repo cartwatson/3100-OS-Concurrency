@@ -1,24 +1,18 @@
 
 
-public class SchedulerRR implements Scheduler {
-    // class variables
-    private int contextSwitches;
-
+public class SchedulerRR extends SchedulerBase implements Scheduler {
     // constructor
-    public SchedulerRR(Platform platform) {
+    public SchedulerRR(Platform platform, int timeQuantum) {
 
     }
 
     // methods
-    public int getNumberOfContextSwitches() {
-        return contextSwitches;
-    }
-
-    public void notifyNewProcess(Process process) {
+    public void notifyNewProcess(Process p) {
         // TODO: implement
     }
 
-    public Process update(Process process) {
+    public Process update(Process cpu) {
         // TODO: implement
+        return cpu;
     }
 }

@@ -1,24 +1,18 @@
 
 
-public class SchedulerPriority implements Scheduler {
-    // class variables
-    private int contextSwitches;
-
+public class SchedulerPriority extends SchedulerBase implements Scheduler {
     // constructor
     public SchedulerPriority(Platform platform) {
 
     }
 
     // methods
-    public int getNumberOfContextSwitches() {
-        return contextSwitches;
-    }
-
-    public void notifyNewProcess(Process process) {
+    public void notifyNewProcess(Process p) {
         // TODO: implement
     }
 
-    public Process update(Process process) {
+    public Process update(Process cpu) {
         // TODO: implement
+        return cpu;
     }
 }
