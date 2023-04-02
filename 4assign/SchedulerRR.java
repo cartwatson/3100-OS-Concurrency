@@ -19,61 +19,45 @@ public class SchedulerRR extends SchedulerBase implements Scheduler {
     }
 
     public Process update(Process cpu) {
-        Process next = null;
-
         // start of program, throw out first process
-        if (cpu == null) {
-            next = processes.get(0);
-            contextSwitches++; // increment context switch
-            platform.log(" Scheduled: " + next.getName());
-            return next;
+        if (cpu == null) { return getNext(); }
+
+        if (cpu.isExecutionComplete()) {
+            platform.log(" Process " + cpu.getName() + " execution complete");
+            
+            // remove from queue
+            processes.remove(0);
+            contextSwitches++;
+
+            // grab next process or return null
+            return getNext();
         }
 
-        // burst complete
-        if (cpu.isBurstComplete()) {
-            platform.log(" Process " + cpu.getName() + " burst complete");
+        // if time quantum is up
+        if (cpu.getElapsedBurst() % timeQuantum == 0) {
+            platform.log(" Time Quantum complete for process " + cpu.getName());
 
             // take completed burst process off queue
             Process temp = processes.remove(0);
             contextSwitches++; // increment context switch
-            
-            // execution is compelete
-            if (cpu.isExecutionComplete()) { platform.log(" Process " + cpu.getName() + " execution complete"); }
-            // only re-add process to queue if process is not completed
-            else { processes.add(temp); }
-            
-            if (!processes.isEmpty()) {
-                // grab next process
-                next = processes.get(0);
-                contextSwitches++; // increment context switch
 
-                // log schedule
-                platform.log(" Scheduled: " + next.getName());
-            }
+            // re-add because it's not done
+            processes.add(temp);
 
-            // move to next process
-            return next;
-        }
-        // burst not complete
-        else {
-            // if time quantum is up
-            if (cpu.getElapsedBurst() % timeQuantum == 0) {
-                platform.log(" Time Quantum complete for process " + cpu.getName());
-
-                // take completed burst process off queue
-                Process temp = processes.remove(0);
-                contextSwitches++; // increment context switch
-
-                // re-add because it's not done
-                processes.add(temp);
-
-                next = processes.get(0);
-                contextSwitches++;
-                platform.log(" Scheduled: " + next.getName());
-                return next;
-            }
+            return getNext();
         }
 
         return cpu;
+    }
+
+    private Process getNext() {
+        // null check
+        if (processes.isEmpty()) { return null; }
+
+        // get next from list
+        Process next = processes.get(0);
+        contextSwitches++; // increment context switch
+        platform.log(" Scheduled: " + next.getName());
+        return next;
     }
 }

@@ -28,15 +28,8 @@ public class SchedulerSJF extends SchedulerBase implements Scheduler {
 
 
     public Process update(Process cpu) {
-        Process next = null;
-
         // start of program, throw out first process
-        if (cpu == null) {
-            next = processes.get(0);
-            contextSwitches++; // increment context switch
-            platform.log(" Scheduled: " + next.getName());
-            return next;
-        }
+        if (cpu == null) { return getNext(); }
 
         // burst complete
         if (cpu.isBurstComplete()) {
@@ -51,20 +44,22 @@ public class SchedulerSJF extends SchedulerBase implements Scheduler {
             // only re-add process to queue if process is not completed
             else { processes.add(curr); }
             
-            if (!processes.isEmpty()) {
-                // grab next process
-                next = processes.get(0);
-                contextSwitches++; // increment context switch
-
-                // log schedule
-                platform.log(" Scheduled: " + next.getName());
-            }
-
-            // move to next process
-            return next;
+            // grab next process or return null
+            return getNext();
         }
 
         // process not complete, return keep working on it
         return cpu;
+    }
+
+    private Process getNext() {
+        // null check
+        if (processes.isEmpty()) { return null; }
+
+        // get next from list
+        Process next = processes.get(0);
+        contextSwitches++; // increment context switch
+        platform.log(" Scheduled: " + next.getName());
+        return next;
     }
 }
