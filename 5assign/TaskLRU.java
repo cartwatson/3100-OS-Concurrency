@@ -11,6 +11,7 @@ public class TaskLRU {
     }
 
     public int run() {
+        // init sequence ref and LRU
         int[] LRU = new int[maxPageReference];
         int[] sequenceReference = new int[maxPageReference];
 
@@ -18,6 +19,7 @@ public class TaskLRU {
             sequenceReference[i] = Integer.MIN_VALUE;
         }
 
+        // run
         for (int i = 0; i < maxPageReference; i++) {
             int hit = 0;
             for (int j = 0; j < maxMemoryFrames; j++) {
@@ -57,7 +59,6 @@ public class TaskLRU {
                 pageFault++;
             }
         }
-
         return pageFault;
     }
 }

@@ -3,36 +3,35 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Assign5 {
-
-    // Initialize the counters to track the most accurate algorithm
+    // init counters
     public static int FIFO_PF = 0;
     public static int LRU_PF = 0;
     public static int MRU_PF = 0;
 
-    // Initialize the counters to track the max page faults in a single algorithm
+    // max page fault counter
     public static int FIFO_MAX = 0;
     public static int LRU_MAX = 0;
     public static int MRU_MAX = 0;
 
-    // Initialize an array to hold all page faults, so it can be checked for Belady's anomaly
+    // init page faults array
     public static int[] FIFO_TOTAL_PF = new int[100];
     public static int[] LRU_TOTAL_PF = new int[100];
     public static int[] MRU_TOTAL_PF = new int[100];
 
-    // Initialize the arrays to track Belady's Anomaly for each algorithm
+    // init arrays to track Belady's Anomaly
     public static List<String> FIFO_Belady = new ArrayList<>();
     public static List<String> LRU_Belady = new ArrayList<>();
     public static List<String> MRU_Belady = new ArrayList<>();
 
     public static void main(String[] args) throws InterruptedException {
-
-        // Get the number of cores the CPU can use for threads
+        // get # of cores
         int threadCount = Runtime.getRuntime().availableProcessors();
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
-        // Start the timer for the simulation
+        // start timer
         long start = System.currentTimeMillis();
 
+        // execute sim
         for (int i = 0; i < 1000; i++) {
             executor.execute(new Simulator());
         }
@@ -41,19 +40,17 @@ public class Assign5 {
             Thread.sleep(50);
         }
 
-        // Finish the timer, and report the simulation
+        // stop timer, report sim
         long finish = System.currentTimeMillis();
         report(finish - start);
     }
 
-
     static class Simulator implements Runnable {
         public void run() {
-
-            // Initialize static variables
+            // init var
             int maxPageReference = 250;
 
-            // Create the randomized list of length 1000
+            // create random list; len 1000
             for (int i = 0; i < 100; i++) {
                 int[] sequence = randomList(1000);
                 int FIFO_Counter = (new TaskFIFO(sequence, i + 1, maxPageReference)).run();
@@ -128,10 +125,10 @@ public class Assign5 {
     }
 
 
-    // Returns a randomized list of integers, to the specified length
-    public static int[] randomList(int listLength) {
-        Integer[] sequence = new Integer[listLength];
-        for (int i = 0; i < listLength; i++) {
+    // creates list of random ints
+    public static int[] randomList(int listLen) {
+        Integer[] sequence = new Integer[listLen];
+        for (int i = 0; i < listLen; i++) {
             sequence[i] = i + 1;
         }
 
@@ -143,15 +140,15 @@ public class Assign5 {
         return intSequence.stream().mapToInt(Integer::intValue).toArray();
     }
 
-
-    // The final report for the program. Reports time, the least faulty algorithm, and the Belady's anomaly report
+    // The final report for the program
     public static void report(long totalTime) {
-
+        // calculate scaled pf
         int totalPageFaults = FIFO_PF + LRU_PF + MRU_PF;
         float scaledFIFO = ((float) FIFO_PF * ((float) FIFO_PF / (float) totalPageFaults));
         float scaledLRU = ((float) LRU_PF * ((float) LRU_PF / (float) totalPageFaults));
         float scaledMRU = ((float) MRU_PF * ((float) MRU_PF / (float) totalPageFaults));
 
+        // print final report
         System.out.println("Simulation took " + (totalTime) + " milliseconds\n");
         System.out.println("FIFO min PF : " + ((int) scaledFIFO));
         System.out.println("LRU min PF  : " + ((int) scaledLRU));
@@ -161,10 +158,8 @@ public class Assign5 {
         printBelady(MRU_Belady, "MRU", MRU_MAX);
     }
 
-
-    // Prints each of the items in the Belady's report
+    // Print items in report
     public static void printBelady(List<String> list, String name, int max) {
-
         System.out.println("Belady's Anomaly Report for " + name);
         for (String s : list) {
             System.out.println("\t" + s);

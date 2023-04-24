@@ -1,6 +1,6 @@
 public class TaskFIFO {
     private final int[] sequence;
-    private final int maxMemoryFrames;
+    private final int maxMemoryFrames; // never used but needed for constructor as per assign desc
     private final int maxPageReference;
     private int pageFault = 0;
 
@@ -11,12 +11,14 @@ public class TaskFIFO {
     }
 
     public int run() {
+        // init sequence ref
         int[] sequenceReference = new int [maxPageReference];
 
         for (int i = 0; i < maxPageReference; i++) {
             sequenceReference[i] = i;
         }
 
+        // run
         for (int i = 0; i < maxPageReference; i++) {
             boolean hit = false;
 
@@ -36,7 +38,6 @@ public class TaskFIFO {
                 pageFault++;
             }
         }
-
         return pageFault;
     }
 }
